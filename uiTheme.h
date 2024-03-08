@@ -13,6 +13,13 @@ typedef struct
     QColor textColor;
     QColor bordorColor;
     QColor itemColor;
+
+    QColor titleColor;
+    QColor PaintBackColor;
+    QColor toolBarColor;
+    QColor bottomColor;
+
+
 }themeColor_T;
 #define THEME_COLOR_MAX 6
 
@@ -28,7 +35,6 @@ public:
 
     themeColor_T themeColor[THEME_COLOR_MAX];
     int  themeCurrentCnt;
-    void setDefaultThemeColor(void);
 public:
 
     void themeSet(QWidget* w, int i);

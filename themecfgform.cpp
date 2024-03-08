@@ -39,8 +39,7 @@ themeCfgForm::themeCfgForm(QWidget *parent) :
     SubUiThemeSet(theme->themeCurrentCnt);
 
 
-//    ui->widget_2->setLayout(new QGridLayout);
-    QColorDialog* c = new QColorDialog(ui->colorWidget);
+    QColorDialog* c = new QColorDialog(ui->rightWidget);
 
     c->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
     c->setOption(QColorDialog::NoButtons,true);
@@ -51,6 +50,10 @@ themeCfgForm::themeCfgForm(QWidget *parent) :
     connect(ui->txcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
     connect(ui->bdcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
     connect(ui->itcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
+    connect(ui->ttcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
+    connect(ui->pbcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
+    connect(ui->tlcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
+    connect(ui->bmcSet, &QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
     connect(ui->confirm,&QPushButton::clicked,this,[=]{ColorSet(c->currentColor());});
 
     connect(ui->btcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
@@ -58,12 +61,20 @@ themeCfgForm::themeCfgForm(QWidget *parent) :
     connect(ui->txcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
     connect(ui->bdcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
     connect(ui->itcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
+    connect(ui->ttcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
+    connect(ui->pbcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
+    connect(ui->tlcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
+    connect(ui->bmcs,&QLineEdit::textChanged,this,&themeCfgForm::ColorChanged);
 
     connect(ui->btcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->btcs->text()));});
     connect(ui->bkcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->bkcs->text()));});
     connect(ui->txcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->txcs->text()));});
     connect(ui->bdcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->bdcs->text()));});
     connect(ui->itcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->itcs->text()));});
+    connect(ui->ttcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->ttcs->text()));});
+    connect(ui->pbcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->pbcs->text()));});
+    connect(ui->tlcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->tlcs->text()));});
+    connect(ui->bmcs,&QLineEdit::cursorPositionChanged,this,[=]{c->setCurrentColor(QColor(ui->bmcs->text()));});
 
 
     c->show();
@@ -89,6 +100,10 @@ void themeCfgForm::SubUiThemeGet(void)
         theme->themeColor[i].textColor = setting->value(QString("theme%1").arg(i)+"/txc").value<QColor>();
         theme->themeColor[i].bordorColor = setting->value(QString("theme%1").arg(i)+"/bdc").value<QColor>();
         theme->themeColor[i].itemColor = setting->value(QString("theme%1").arg(i)+"/itc").value<QColor>();
+        theme->themeColor[i].titleColor = setting->value(QString("theme%1").arg(i)+"/ttc").value<QColor>();
+        theme->themeColor[i].PaintBackColor = setting->value(QString("theme%1").arg(i)+"/pbc").value<QColor>();
+        theme->themeColor[i].toolBarColor = setting->value(QString("theme%1").arg(i)+"/tlc").value<QColor>();
+        theme->themeColor[i].bottomColor = setting->value(QString("theme%1").arg(i)+"/bmc").value<QColor>();
     }
 
 
@@ -111,6 +126,11 @@ void themeCfgForm::uiThemeConfrim(void)
         setting->setValue(QString("theme%1").arg(i)+"/txc",theme->themeColor[i].textColor.name());
         setting->setValue(QString("theme%1").arg(i)+"/bdc",theme->themeColor[i].bordorColor.name());
         setting->setValue(QString("theme%1").arg(i)+"/itc",theme->themeColor[i].itemColor.name());
+        setting->setValue(QString("theme%1").arg(i)+"/ttc",theme->themeColor[i].titleColor.name());
+        setting->setValue(QString("theme%1").arg(i)+"/pbc",theme->themeColor[i].PaintBackColor.name());
+        setting->setValue(QString("theme%1").arg(i)+"/tlc",theme->themeColor[i].toolBarColor.name());
+        setting->setValue(QString("theme%1").arg(i)+"/bmc",theme->themeColor[i].bottomColor.name());
+
     }
 
     emit Ui_Change_Confirmed();
@@ -135,6 +155,10 @@ void themeCfgForm::SubUiThemeSet(int i)
         this->ui->txcs->setText(theme->themeColor[i].textColor.name());
         this->ui->bdcs->setText(theme->themeColor[i].bordorColor.name());
         this->ui->itcs->setText(theme->themeColor[i].itemColor.name());
+        this->ui->ttcs->setText(theme->themeColor[i].titleColor.name());
+        this->ui->pbcs->setText(theme->themeColor[i].PaintBackColor.name());
+        this->ui->tlcs->setText(theme->themeColor[i].toolBarColor.name());
+        this->ui->bmcs->setText(theme->themeColor[i].bottomColor.name());
     }
 }
 
@@ -191,6 +215,22 @@ void themeCfgForm::ColorSet(const QColor color)
     {
         ui->itcs->setText(color.name());
     }
+    else if(btn->objectName() == "ttcSet")
+    {
+        ui->ttcs->setText(color.name());
+    }
+    else if(btn->objectName() == "pbcSet")
+    {
+        ui->pbcs->setText(color.name());
+    }
+    else if(btn->objectName() == "tlcSet")
+    {
+        ui->tlcs->setText(color.name());
+    }
+    else if(btn->objectName() == "bmcSet")
+    {
+        ui->bmcs->setText(color.name());
+    }
 
 }
 
@@ -228,6 +268,22 @@ void themeCfgForm::ColorChanged(void)
         else if(line->objectName() == "itcs")
         {
             theme->themeColor[theme->themeCurrentCnt].itemColor   = QColor(ui->itcs->text());
+        }
+        else if(line->objectName() == "ttcs")
+        {
+            theme->themeColor[theme->themeCurrentCnt].titleColor   = QColor(ui->ttcs->text());
+        }
+        else if(line->objectName() == "pbcs")
+        {
+            theme->themeColor[theme->themeCurrentCnt].PaintBackColor   = QColor(ui->pbcs->text());
+        }
+        else if(line->objectName() == "tlcs")
+        {
+            theme->themeColor[theme->themeCurrentCnt].toolBarColor = QColor(ui->tlcs->text());
+        }
+        else if(line->objectName() == "bmcs")
+        {
+            theme->themeColor[theme->themeCurrentCnt].bottomColor   = QColor(ui->bmcs->text());
         }
 
         theme->themeSet(this,theme->themeCurrentCnt);

@@ -8,6 +8,7 @@
 #include <QPalette>
 #include <QObject>
 #include <QFont>
+#include <QFile>
 
 
 #define C_DARK   "#555555"
@@ -18,12 +19,23 @@
 
 static const themeColor_T themeColorDefault[THEME_COLOR_MAX]
 {
-    themeColor_T{QColor("#555555"),QColor("#555555"),QColor("#E0E0E0"),QColor("#A0A0A0"),QColor("#303030")},
-    themeColor_T{QColor("#f0c2a2"),QColor("#f0c2a2"),QColor("#f5f3f2"),QColor("#c0a292"),QColor("#c09282")},
-    themeColor_T{QColor("#7d929f"),QColor("#7d929f"),QColor("#ecebc2"),QColor("#dcdba2"),QColor("#bcbb92")},
-    themeColor_T{QColor("#ddbb99"),QColor("#ddbb99"),QColor("#535164"),QColor("#434154"),QColor("#333144")},
-    themeColor_T{QColor("#d4e5ef"),QColor("#d4e5ef"),QColor("#e67762"),QColor("#d66752"),QColor("#c65742")},
-    themeColor_T{QColor("#efefef"),QColor("#efefef"),QColor("#88abda"),QColor("#78bbca"),QColor("#68abba")},
+    themeColor_T{QColor("#5d5d5d"),QColor("#1f1f1f"),QColor("#d5d5d5"),QColor("#848484"),QColor("#686868"),
+                 QColor("#1f1f1f"),QColor("#4d4d4d"),QColor("#1f1f1f"),QColor("#393939")},
+
+    themeColor_T{QColor("#f0c2a2"),QColor("#f0c2a2"),QColor("#ffffff"),QColor("#c0a292"),QColor("#c09282"),
+                 QColor("#f0c2a2"),QColor("#f0c2a2"),QColor("#f0c2a2"),QColor("#f0c2a2")},
+
+    themeColor_T{QColor("#7d929f"),QColor("#7d929f"),QColor("#ecebc2"),QColor("#dcdba2"),QColor("#bcbb92"),
+                 QColor("#7d929f"),QColor("#7d929f"),QColor("#ecebc2"),QColor("#dcdba2")},
+
+    themeColor_T{QColor("#ddbb99"),QColor("#ddbb99"),QColor("#535164"),QColor("#434154"),QColor("#333144"),
+                 QColor("#ddbb99"),QColor("#ddbb99"),QColor("#535164"),QColor("#434154")},
+
+    themeColor_T{QColor("#d4e5ef"),QColor("#d4e5ef"),QColor("#e67762"),QColor("#d66752"),QColor("#c65742"),
+                 QColor("#d4e5ef"),QColor("#d4e5ef"),QColor("#e67762"),QColor("#d66752")},
+
+    themeColor_T{QColor("#efefef"),QColor("#efefef"),QColor("#88abda"),QColor("#78bbca"),QColor("#68abba"),
+                 QColor("#efefef"),QColor("#efefef"),QColor("#88abda"),QColor("#78bbca")},
 };
 
 #if _MSC_VER >= 1600
@@ -94,14 +106,6 @@ static QColor colorDiffer(QColor c,int n)
 
 #define C_REVERSE(c)     (colorRevers(c))
 
-void UiTheme::setDefaultThemeColor(void)
-{
-    for(int i = 0; i<THEME_COLOR_MAX; i++)
-    {
-        themeColor[i] = themeColorDefault[i];
-    }
-}
-
 
 
 void UiTheme::SetAllButtonTheme(QWidget *w)
@@ -125,13 +129,13 @@ void UiTheme::SetTitleButtonTheme(QWidget *w, QPushButton *btn)
 {
     QColor txc = themeColor[themeCurrentCnt].textColor;
     QColor btc = themeColor[themeCurrentCnt].buttonColor;
-    QColor bkc = themeColor[themeCurrentCnt].backColor;
+    QColor ttc = themeColor[themeCurrentCnt].backColor;
 
     QString objN = btn->objectName();
 
     QString tBarBtnSS  = QString("#%1 {border-style: none;color: %2;background-color: transparent;border-radius: 0px;}\n").arg(objN).arg(txc.name());
-            tBarBtnSS += QString("#%1:hover {border-style: none;color: %2; border-style: none;background-color: %3;}\n").arg(objN).arg(txc.name()).arg(BTN_C_CODE_H(bkc));
-            tBarBtnSS += QString("#%1:pressed{border-style: none;color: %2;background-color: %3;}\n").arg(objN).arg(txc.name()).arg(BTN_C_CODE_P(btc));
+            tBarBtnSS += QString("#%1:hover {border-style: none;color: %2; border-style: none;background-color: %3;}\n").arg(objN).arg(txc.name()).arg(BTN_C_CODE_H(ttc));
+            tBarBtnSS += QString("#%1:pressed{border-style: none;color: %2;background-color: %3;}\n").arg(objN).arg(txc.name()).arg(BTN_C_CODE_P(ttc));
 
     QString ss = w->styleSheet();
     ss += tBarBtnSS;
@@ -173,7 +177,7 @@ void UiTheme::SetAllSpinTheme(QWidget *w)
 
     QString ss = w->styleSheet();
 
-    ss = ss + QString("QSpinBox{border-style: none;color: %1;background-color:%2;}").arg(txc.name()).arg(itc.name());
+    ss = ss + QString("QSpinBox{border-style: none;color: %1;background-color:%2;}\n").arg(txc.name()).arg(itc.name());
 
     w->setStyleSheet(QString(""));
     w->setStyleSheet(ss);
@@ -187,9 +191,9 @@ void UiTheme::SetAllSliderTheme(QWidget *w)
     QString ss = w->styleSheet();
 
     ss = ss+QString("QSlider::handle:horizontal{height: 10px;  width: 10px;margin: 0px -2px 0px -2px;border-radius: 4px;"
-                    "background: %1;border: 2px solid %2;}QSlider{border: 0px;}").arg(itc.name()).arg(txc.name());
+                    "background: %1;border: 2px solid %2;}QSlider{border: 0px;}\n").arg(itc.name()).arg(txc.name());
     ss = ss+QString("QSlider::handle:vertical{height: 10px;  width: 10px;margin: 0px -2px 0px -2px;border-radius: 4px;"
-                    "background: %1;border: 2px solid %2;}QSlider{border: 0px;}").arg(itc.name()).arg(txc.name());
+                    "background: %1;border: 2px solid %2;}QSlider{border: 0px;}\n").arg(itc.name()).arg(txc.name());
     w->setStyleSheet(QString(""));
     w->setStyleSheet(ss);
 }
@@ -200,7 +204,7 @@ void UiTheme::SetAllLabelTheme(QWidget *w)
 
     QString ss = w->styleSheet();
 
-    ss = ss+QString("QLabel{border-style: none;color: %1;}").arg(txc.name());
+    ss = ss+QString("QLabel{border-style: none;color: %1;}\n").arg(txc.name());
 
     w->setStyleSheet(QString(""));
     w->setStyleSheet(ss);
@@ -213,7 +217,7 @@ void UiTheme::SetAllGroupTheme(QWidget *w)
 
     QString ss = w->styleSheet();
 
-    ss = ss+QString("QGroupBox{border: 2px solid %1;color: %2;}").arg(bdc.name()).arg(txc.name());
+    ss = ss+QString("QGroupBox{border: 2px solid %1;color: %2;\n}").arg(bdc.name()).arg(txc.name());
 
     w->setStyleSheet(QString(""));
     w->setStyleSheet(ss);
@@ -228,7 +232,7 @@ void UiTheme::SetAllEditorTheme(QWidget *w)
 
     QString ss = w->styleSheet();
 
-    ss = ss+QString("QLineEdit{border: 2px solid %1;color: %2;background: %3;}").arg(bdc.name()).arg(txc.name()).arg(bkc.name());
+    ss = ss+QString("QLineEdit{border: 2px solid %1;color: %2;background: %3;\n}").arg(bdc.name()).arg(txc.name()).arg(bkc.name());
 
     w->setStyleSheet(QString(""));
     w->setStyleSheet(ss);
@@ -249,7 +253,16 @@ void UiTheme::SetAllLineTheme(QWidget *w)
     {
         if(l->objectName().left(4) == "line")
         {
-            ss = ss+QString("#%1{background: %2;}").arg(l->objectName()).arg(bdc.name());
+            ss = ss+QString("#%1{background: %2;\n}").arg(l->objectName()).arg(bdc.name());
+            l->setFrameShadow(QFrame::Plain);
+            if(l->frameShape()==QFrame::HLine)
+            {
+                l->setMaximumHeight(1);
+            }
+            if(l->frameShape()==QFrame::VLine)
+            {
+                l->setMaximumWidth(1);
+            }
         }
     }
 
@@ -283,6 +296,10 @@ void UiTheme::themeSet(QWidget* w, int i)
     QColor  txc = themeColor[themeCurrentCnt].textColor;
     QColor  bdc = themeColor[themeCurrentCnt].bordorColor;
     QColor  itc = themeColor[themeCurrentCnt].itemColor;
+    QColor  ttc = themeColor[themeCurrentCnt].titleColor;
+    QColor  pbc = themeColor[themeCurrentCnt].PaintBackColor;
+    QColor  tlc = themeColor[themeCurrentCnt].toolBarColor;
+    QColor  bmc = themeColor[themeCurrentCnt].bottomColor;
 
     qDebug()<<btc.name()<<" - "<<bkc.name()<<" - "<<txc.name()<<" - "<<bdc.name()<<" - "<<itc.name();
 //    //字体
@@ -299,24 +316,31 @@ void UiTheme::themeSet(QWidget* w, int i)
     QString tBarBtnSS = w->styleSheet();
     tBarBtnSS  = QString("\n#minimizeButton {image: url(:/res/minimize-button1.png);}\n");
     tBarBtnSS += QString("\n#minimizeButton, #maximizeButton {background-color: transparent;border-radius: 0px;}\n");
-    tBarBtnSS += QString("\n#minimizeButton:hover, #maximizeButton:hover {border-style: none;background-color: %1;}\n").arg(BTN_C_CODE_H(bkc));
-    tBarBtnSS += QString("\n#minimizeButton:pressed, #maximizeButton:pressed {border-style: none;background-color: %1;}\n").arg(BTN_C_CODE_P(bkc));
+    tBarBtnSS += QString("\n#minimizeButton:hover, #maximizeButton:hover {border-style: none;background-color: %1;}\n").arg(BTN_C_CODE_H(ttc));
+    tBarBtnSS += QString("\n#minimizeButton:pressed, #maximizeButton:pressed {border-style: none;background-color: %1;}\n").arg(BTN_C_CODE_P(ttc));
     tBarBtnSS += QString("\n#closeButton {image: url(:/res/close-button1.png);background-color: transparent;border-radius: 0px;}\n");
     tBarBtnSS += QString("\n#closeButton:hover {image: url(:/res/close-button2.png);border-style: none;background-color: #e81123;}\n");
     tBarBtnSS += QString("\n#closeButton:pressed {image: url(:/res/close-button2.png);border-style: none;background-color: #8c0a15;}\n");
 
     //标题栏的菜单栏
-    tBarBtnSS += QString("QMenuBar{background-color:%1;}").arg(bkc.name());
-    tBarBtnSS += QString("QMenuBar::item{background-color:%1;color:%2;}\n").arg(bkc.name()).arg(txc.name());
-    tBarBtnSS += QString("QMenuBar::item:hover{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(bkc)).arg(txc.name());
-    tBarBtnSS += QString("QMenuBar::item:selected{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(bkc)).arg(txc.name());
-    tBarBtnSS += QString("QMenu{background-color:%1;border:none;}\n").arg(bkc.name());
-    tBarBtnSS += QString("QMenu::item{padding:5px 20px;border: %1;background-color:%1;color:%2;}\n").arg(bkc.name()).arg(txc.name());
-    tBarBtnSS += QString("QMenu::item:hover{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(bkc)).arg(txc.name());
-    tBarBtnSS += QString("QMenu::item:selected{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(bkc)).arg(txc.name());
+    tBarBtnSS += QString("QMenuBar{background-color: transparent;}");
+    tBarBtnSS += QString("QMenuBar::item{background-color: transparent;color:%1;}\n").arg(txc.name());
+    tBarBtnSS += QString("QMenuBar::item:hover{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(ttc)).arg(txc.name());
+    tBarBtnSS += QString("QMenuBar::item:selected{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(ttc)).arg(txc.name());
+    tBarBtnSS += QString("QMenu{background-color:%1;border:none;}\n").arg(ttc.name());
+    tBarBtnSS += QString("QMenu::item{padding:5px 20px;border: %1;background-color:%1;color:%2;}\n").arg(ttc.name()).arg(txc.name());
+    tBarBtnSS += QString("QMenu::item:hover{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(ttc)).arg(txc.name());
+    tBarBtnSS += QString("QMenu::item:selected{background-color:%1;color:%2;}\n").arg(BTN_C_CODE_H(ttc)).arg(txc.name());
 
-    tBarBtnSS += QString("\n#icoTitle {background-image: url(:/res/main.jpg);}\n");
-    tBarBtnSS += QString("\n#paintAera {background-color: %1;}\n").arg(itc.name());
+    tBarBtnSS += QString("\n#icoTitle {border-style: none;background-image: url(:/res/main1.png);}\n");
+    tBarBtnSS += QString("\n#paintAera {background: %1;}\n").arg(pbc.name());
+
+    tBarBtnSS += QString("\n#titleWidget {background: %1;}\n").arg(ttc.name());
+    tBarBtnSS += QString("\n#leftWidget {background: %1;}\n").arg(tlc.name());
+    tBarBtnSS += QString("\n#rightWidget {background: %1;}\n").arg(tlc.name());
+    tBarBtnSS += QString("\n#bottomWidget {background: %1;}\n").arg(bmc.name());
+
+
     w->setStyleSheet(QString(""));
     w->setStyleSheet(tBarBtnSS);
 

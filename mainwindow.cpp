@@ -127,23 +127,24 @@ void MainWindow::MainUiThemeGet(void)
 {
     theme = new UiTheme;
 
-    QSettings* setting = new QSettings(QCoreApplication::applicationDirPath()+"/uiTheme.ini",QSettings::IniFormat);
+    QFile fIniNew(QCoreApplication::applicationDirPath()+"/uiTheme.ini");
 
-    if(!(setting->contains("theme0/btc")&&setting->contains("theme5/itc")))
+
+    if(!fIniNew.exists())
     {
-        qDebug()<<"set default ini";
-        setting->setValue("currentCnt/CNT","0");
+        QFile fIni(":/uiTheme/uiTheme.ini");
+        fIni.open(QIODevice::ReadOnly |QIODevice::Text);
+        QByteArray setItems = fIni.readAll();
+        fIni.close();
 
-        theme->setDefaultThemeColor();
-        for(int i = 0; i < THEME_COLOR_MAX; i++)
-        {
-            setting->setValue(QString("theme%1").arg(i)+"/btc",theme->themeColor[i].buttonColor.name());
-            setting->setValue(QString("theme%1").arg(i)+"/bkc",theme->themeColor[i].backColor.name());
-            setting->setValue(QString("theme%1").arg(i)+"/txc",theme->themeColor[i].textColor.name());
-            setting->setValue(QString("theme%1").arg(i)+"/bdc",theme->themeColor[i].bordorColor.name());
-            setting->setValue(QString("theme%1").arg(i)+"/itc",theme->themeColor[i].itemColor.name());
-        }
+        fIniNew.open(QIODevice::ReadWrite |QIODevice::Text);
+        fIniNew.write(setItems);
+        fIniNew.close();
     }
+
+    QSettings* setting = new QSettings(QCoreApplication::applicationDirPath()+"/uiTheme.ini",QSettings::IniFormat);
+    qDebug()<<"set default ini";
+    setting->setValue("currentCnt/CNT","0");
 
     for(int i = 0; i < THEME_COLOR_MAX; i++)
     {
@@ -153,6 +154,10 @@ void MainWindow::MainUiThemeGet(void)
         theme->themeColor[i].textColor = setting->value(QString("theme%1").arg(i)+"/txc").value<QColor>();
         theme->themeColor[i].bordorColor = setting->value(QString("theme%1").arg(i)+"/bdc").value<QColor>();
         theme->themeColor[i].itemColor = setting->value(QString("theme%1").arg(i)+"/itc").value<QColor>();
+        theme->themeColor[i].titleColor = setting->value(QString("theme%1").arg(i)+"/ttc").value<QColor>();
+        theme->themeColor[i].PaintBackColor = setting->value(QString("theme%1").arg(i)+"/pbc").value<QColor>();
+        theme->themeColor[i].toolBarColor = setting->value(QString("theme%1").arg(i)+"/tlc").value<QColor>();
+        theme->themeColor[i].bottomColor = setting->value(QString("theme%1").arg(i)+"/bmc").value<QColor>();
     }
 
 
@@ -170,7 +175,28 @@ void MainWindow::MainUiThemeSet(int i)
         {
             i = 0;
         }
+
+        QColor  ttc = theme->themeColor[theme->themeCurrentCnt].titleColor;
+        QColor  pbc = theme->themeColor[theme->themeCurrentCnt].PaintBackColor;
+        QColor  tlc = theme->themeColor[theme->themeCurrentCnt].toolBarColor;
+        QColor  bmc = theme->themeColor[theme->themeCurrentCnt].bottomColor;
+
+
+
         theme->themeSet(this,i);
+
+//        QPalette TitleW;
+//        TitleW.setBrush(QPalette::Window,QBrush(ttc));
+//        ui->titleWidget->setPalette(TitleW);
+
+//        QPalette ToolW;
+//        ToolW.setBrush(QPalette::Window,QBrush(tlc));
+//        ui->leftWidget->setPalette(ToolW);
+//        ui->rightWidget->setPalette(ToolW);
+
+//        QPalette BottomW;
+//        BottomW.setBrush(QPalette::Window,QBrush(bmc));
+//        ui->bottomWidget->setPalette(BottomW);
 
         theme->SetThemeButtonTheme(this,ui->themeColor_0);
         theme->SetThemeButtonTheme(this,ui->themeColor_1);

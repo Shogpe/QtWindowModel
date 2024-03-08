@@ -10,5 +10,8 @@
         <file>res/maximize-button2.png</file>
         <file>res/minimize-button1.png</file>
         <file>res/main.jpg</file>
+        <file>res/main.png</file>
+        <file>res/main1.png</file>
+        <file>uiTheme/uiTheme.ini</file>
     </qresource>
 </RCC>
