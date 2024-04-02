@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto helper = new FramelessHelper(this);
     helper->setDraggableMargins(3, 3, 3, 3);
-    helper->setMaximizedMargins(3, 3, 3, 3);
+    helper->setMaximizedMargins(0, 0, 0, 0);
     helper->setTitleBarHeight(60);
 
     helper->addExcludeItem(ui->minimizeButton);
@@ -88,6 +88,8 @@ void MainWindow::syncPosition()
     QScreen *screen = window->screen();
 
     window->setX(screen->availableGeometry().width() / 2 + 10);
+
+
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -249,3 +251,5 @@ void MainWindow::MainUiThemeConfig(const QPoint &pos)
 
 
 }
+
+
